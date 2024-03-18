@@ -12,15 +12,15 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
     strategy:
       matrix:
         go-version: [ '1.21' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Go to working directory
-        run: pushd ${{ inputs.working_directory }}
 
       - name: Setup Go
         uses: actions/setup-go@v5
