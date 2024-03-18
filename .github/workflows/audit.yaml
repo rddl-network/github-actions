@@ -4,7 +4,7 @@ name: Audit
 on:
   workflow_call:
     inputs:
-      working-directory:
+      working_directory:
         required: false
         type: string
         default: './'
@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Go to working directory
-        run: pushd ${{ inputs.working-directory }}
+        run: pushd ${{ inputs.working_directory }}
 
       - name: Setup Go
         uses: actions/setup-go@v5
