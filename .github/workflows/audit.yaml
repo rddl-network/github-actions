@@ -3,6 +3,11 @@ name: Audit
 
 on:
   workflow_call:
+    inputs:
+      working-directory:
+        required: false
+        type: string
+        default: './'
 
 jobs:
   audit:
@@ -13,6 +18,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Go to working directory
+        run: pushd ${{ github.event.inputs.working-directory }}
 
       - name: Setup Go
         uses: actions/setup-go@v5
