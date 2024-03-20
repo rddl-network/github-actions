@@ -13,7 +13,7 @@ on:
       files:
         required: true
         type: string
-      submodule_tag:
+      directory:
         required: false
         type: string
 
@@ -24,24 +24,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Submodule Tag
-        if: ${{ github.event.inputs.submodule_tag }}
+      - name: Check submodule
+        if: github.event.inputs.directory != ''
         run: |
-          if ! [[ ${{ github.event.inputs.submodule_tag }} =~ ^[a-zA-Z0-9\_\-]+\/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Tag needs to be folder/vX.Y.Z, e.g. client/v1.2.3"
-            exit 1
+          if ! [[ -f ${{ github.event.inputs.directory }}/go.mod ]]; then
+            echo "No go.mod found in subdirectory"
           fi
-          IFS='/' read -r subdir version <<< "${{ github.event.inputs.submodule_tag }}"
-          if ! [ -d "$subdir" ]; then
-            echo "Subdirectory not found"
-            exit 1
-          fi
-          if ! [ -f "$subdir/go.mod" ]; then
-            echo "No go.mod file found"
-            exit 1
-          fi
-          git tag ${{ github.event.inputs.submodule_tag }}
-          git push origin ${{ github.event.inputs.submodule_tag }}
 
       - name: Tag
         run: |
@@ -49,13 +37,19 @@ jobs:
             echo "Tag needs to be vX.Y.Z, e.g. v1.2.3"
             exit 1
           fi
-          git tag ${{ github.event.inputs.tag }}
-          git push origin ${{ github.event.inputs.tag }}
+          if [[ ${{ github.event.inputs.directory }} ]]; then
+            TAG=${{ github.event.inputs.directory }}/${{ github.event.inputs.tag }}
+          else
+            TAG=${{ github.event.inputs.tag }}
+          fi
+          git tag ${TAG}
+          git push origin ${TAG}
 
       - name: Setup Go
         uses: actions/setup-go@v5
 
       - name: Build
+        if: github.event.directory == ''
         run: |
           go build -v ./cmd/...
 
