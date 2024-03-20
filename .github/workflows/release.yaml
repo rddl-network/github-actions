@@ -36,6 +36,10 @@ jobs:
             echo "Subdirectory not found"
             exit 1
           fi
+          if ! [ -f "$subdir/go.mod" ]; then
+            echo "No go.mod file found"
+            exit 1
+          fi
           git tag ${{ github.event.inputs.submodule_tag }}
           git push origin ${{ github.event.inputs.submodule_tag }}
 
