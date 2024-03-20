@@ -31,6 +31,11 @@ jobs:
             echo "Tag needs to be folder/vX.Y.Z, e.g. client/v1.2.3"
             exit 1
           fi
+          IFS='/' read -r subdir version <<< "${{ github.event.inputs.submodule_tag }}"
+          if ! [ -d "$subdir" ]; then
+            echo "Subdirectory not found"
+            exit 1
+          fi
           git tag ${{ github.event.inputs.submodule_tag }}
           git push origin ${{ github.event.inputs.submodule_tag }}
 
