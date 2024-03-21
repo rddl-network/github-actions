@@ -16,6 +16,7 @@ on:
       directory:
         required: false
         type: string
+        default: ''
 
 jobs:
   release:
@@ -24,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check submodule
+      - name: Check Go submodule
         if: github.event.inputs.directory != ''
         run: |
           if ! [[ -f ${{ github.event.inputs.directory }}/go.mod ]]; then
@@ -37,15 +38,15 @@ jobs:
             echo "Tag needs to be vX.Y.Z, e.g. v1.2.3"
             exit 1
           fi
+          TAG=${{ github.event.inputs.tag }}
           if [[ ${{ github.event.inputs.directory }} ]]; then
             TAG=${{ github.event.inputs.directory }}/${{ github.event.inputs.tag }}
-          else
-            TAG=${{ github.event.inputs.tag }}
           fi
           git tag ${TAG}
           git push origin ${TAG}
 
       - name: Setup Go
+        if: github.event.directory == ''
         uses: actions/setup-go@v5
 
       - name: Build
@@ -54,6 +55,7 @@ jobs:
           go build -v ./cmd/...
 
       - name: Release
+        if: github.event.directory == ''
         uses: softprops/action-gh-release@v1
         with:
           prerelease: ${{ github.event.inputs.prerelease }}
