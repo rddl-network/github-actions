@@ -39,7 +39,7 @@ jobs:
             exit 1
           fi
           TAG=${{ github.event.inputs.tag }}
-          if [[ -z ${{ github.event.inputs.directory }} ]]; then
+          if [[ -n ${{ github.event.inputs.directory }} ]]; then
             TAG=${{ github.event.inputs.directory }}/${{ github.event.inputs.tag }}
           fi
           git tag ${TAG}
