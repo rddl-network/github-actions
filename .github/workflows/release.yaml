@@ -25,6 +25,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout dependency
+        uses: actions/checkout@v4
+        with:
+          repository: rddl-network/bc-slip39-go
+          path: bc-slip39-go
+
+      - name: Build dependency
+        run: |
+          pushd bc-slip39-go
+          ./deps.sh
+          popd
+
       - name: Check Go submodule
         if: github.event.inputs.directory != ''
         run: |
