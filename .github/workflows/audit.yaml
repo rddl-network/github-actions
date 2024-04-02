@@ -12,9 +12,6 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.working_directory }}
     strategy:
       matrix:
         go-version: [ '1.21' ]
@@ -40,30 +37,39 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Verify dependencies
+        working-directory: ${{ inputs.working_directory }}
         run: go mod verify
 
       - name: Build
+        working-directory: ${{ inputs.working_directory }}
         run: go build -v ./...
 
       - name: Run gofmt
+        working-directory: ${{ inputs.working_directory }}
         run: if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then exit 1; fi
 
       - name: Run go vet
+        working-directory: ${{ inputs.working_directory }}
         run: go vet ./...
 
       - name: Install staticcheck
+        working-directory: ${{ inputs.working_directory }}
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Run staticcheck
         env:
           LINT: "//lint:file-ignore SA1019 Ignore all deprecation errors, it's generated"
+        working-directory: ${{ inputs.working_directory }}
         run: staticcheck ./...
 
       - name: Install golangci-lint
+        working-directory: ${{ inputs.working_directory }}
         run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
       - name: Run golangci-lint
+        working-directory: ${{ inputs.working_directory }}
         run: golangci-lint run --timeout 5m
 
       - name: Run tests
+        working-directory: ${{ inputs.working_directory }}
         run: go test -race -vet=off ./...
