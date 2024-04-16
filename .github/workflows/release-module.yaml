@@ -45,7 +45,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          prerelease: ${{ fromJSON(env.PRERELEASE) }}
+          prerelease: ${{ github.event.inputs.prerelease }}
           name: ${{ github.event.inputs.tag }}
           tag_name: ${{ github.event.inputs.tag }}
           fail_on_unmatched_files: true
