@@ -8,13 +8,8 @@ on:
         required: true
         type: string
       prerelease:
-        type: choice
-        description: "Pre-Release?"
         required: true
-        options:
-          - true
-          - false
-        default: true
+        type: boolean
 
 jobs:
   release:
