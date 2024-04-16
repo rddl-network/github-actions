@@ -15,9 +15,6 @@ on:
           - true
           - false
         default: true
-      directory:
-        required: true
-        type: string
 
 jobs:
   release:
@@ -27,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
 
       - name: Build
         run: |
