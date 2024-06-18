@@ -51,7 +51,7 @@ jobs:
       - name: Build
         if: github.event.directory == ''
         run: |
-          go build -v ./cmd/...
+          go build -v -o . ./cmd/...
 
       - name: Tag
         run: |
